@@ -11,7 +11,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -43,25 +42,8 @@ func Connect() {
 	}
 }
 
-type User struct {
-	ID        int
-	Email     string `gorm:"uniqueIndex"`
-	Phone     string
-	Address2  string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
-type Item struct {
-	ID         int
-	UserID     int
-	Amount     int
-	HappenedAt time.Time
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-}
-type Tag struct {
-	ID   int
-	Name string
+func NewQuery() *queries.Queries {
+	return queries.New(DB)
 }
 
 func CreateMigration(filename string) {

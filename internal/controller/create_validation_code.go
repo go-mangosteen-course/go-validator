@@ -2,6 +2,8 @@ package controller
 
 import (
 	"log"
+	"mangosteen/config/queries"
+	"mangosteen/internal/database"
 	"mangosteen/internal/email"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +25,18 @@ func CreateValidationCode(c *gin.Context) {
 		c.String(400, "参数错误")
 		return
 	}
-	if err := email.SendValidationCode(body.Email, "123456"); err != nil {
+	q := database.NewQuery()
+	vc, err := q.CreateValidationCode(c, queries.CreateValidationCodeParams{
+		Email: body.Email,
+		Code:  "123456",
+	})
+	if err != nil {
+		// TODO 没有做校验
+		c.Status(400)
+		return
+	}
+
+	if err := email.SendValidationCode(vc.Email, vc.Code); err != nil {
 		log.Println("[SendValidationCode fail]", err)
 		c.String(500, "发送失败")
 		return

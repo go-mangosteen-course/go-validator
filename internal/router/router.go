@@ -3,6 +3,7 @@ package router
 import (
 	"mangosteen/config"
 	"mangosteen/internal/controller"
+	"mangosteen/internal/database"
 
 	"mangosteen/docs"
 
@@ -15,6 +16,8 @@ func New() *gin.Engine {
 	config.LoadAppConfig()
 	r := gin.Default()
 	docs.SwaggerInfo.Version = "1.0"
+
+	database.Connect()
 
 	r.GET("/api/v1/ping", controller.Ping)
 	r.POST("/api/v1/validation_codes", controller.CreateValidationCode)
