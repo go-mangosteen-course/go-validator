@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"crypto/rand"
 	"log"
 	"mangosteen/config/queries"
 	"mangosteen/internal/database"
@@ -25,10 +26,23 @@ func CreateValidationCode(c *gin.Context) {
 		c.String(400, "参数错误")
 		return
 	}
+	len := 4
+	b := make([]byte, len)
+	_, err := rand.Read(b)
+	if err != nil {
+		log.Println("[rand.Read fail]", err)
+		c.String(500, "发送失败")
+		return
+	}
+	digits := make([]byte, len)
+	for i := range b {
+		digits[i] = b[i]%10 + 48
+	}
+	str := string(digits)
 	q := database.NewQuery()
 	vc, err := q.CreateValidationCode(c, queries.CreateValidationCodeParams{
 		Email: body.Email,
-		Code:  "123456",
+		Code:  str,
 	})
 	if err != nil {
 		// TODO 没有做校验
