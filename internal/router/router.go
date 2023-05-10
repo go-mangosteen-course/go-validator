@@ -21,6 +21,7 @@ func New() *gin.Engine {
 
 	r.GET("/api/v1/ping", controller.Ping)
 	r.POST("/api/v1/validation_codes", controller.CreateValidationCode)
+	r.POST("/api/v1/session", controller.CreateSession)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return r

@@ -47,3 +47,34 @@ func (q *Queries) CreateValidationCode(ctx context.Context, arg CreateValidation
 	)
 	return i, err
 }
+
+const findValidationCode = `-- name: FindValidationCode :one
+SELECT id, code, email, used_at, created_at, updated_at FROM validation_codes
+WHERE
+  email = $1
+  AND
+  code = $2
+  AND
+  used_at = null
+ORDER BY created_at desc
+LIMIT 1
+`
+
+type FindValidationCodeParams struct {
+	Email string
+	Code  string
+}
+
+func (q *Queries) FindValidationCode(ctx context.Context, arg FindValidationCodeParams) (ValidationCode, error) {
+	row := q.db.QueryRowContext(ctx, findValidationCode, arg.Email, arg.Code)
+	var i ValidationCode
+	err := row.Scan(
+		&i.ID,
+		&i.Code,
+		&i.Email,
+		&i.UsedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
