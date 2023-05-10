@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"log"
 	"mangosteen/config/queries"
 	"mangosteen/internal/database"
+	"mangosteen/internal/jwt_helper"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -26,8 +28,13 @@ func CreateSession(c *gin.Context) {
 		c.String(http.StatusBadRequest, "无效的验证码")
 		return
 	}
-	jwt := "xxxxxx"
+	jwt, err := jwt_helper.GenerateJWT(1)
+	if err != nil {
+		log.Println("GenerateJWT fail", err)
+		c.String(http.StatusInternalServerError, "请稍后再试")
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
-		jwt: jwt,
+		"jwt": jwt,
 	})
 }
