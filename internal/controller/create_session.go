@@ -28,13 +28,24 @@ func CreateSession(c *gin.Context) {
 		c.String(http.StatusBadRequest, "无效的验证码")
 		return
 	}
-	jwt, err := jwt_helper.GenerateJWT(1)
+	user, err := q.FindUserByEmail(c, requestBody.Email)
+	if err != nil {
+		user, err = q.CreateUser(c, requestBody.Email)
+		if err != nil {
+			log.Println("CreateUser fail", err)
+			c.String(http.StatusInternalServerError, "请稍后再试")
+			return
+		}
+	}
+
+	jwt, err := jwt_helper.GenerateJWT(int(user.ID))
 	if err != nil {
 		log.Println("GenerateJWT fail", err)
 		c.String(http.StatusInternalServerError, "请稍后再试")
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"jwt": jwt,
+		"jwt":    jwt,
+		"userId": user.ID,
 	})
 }
