@@ -43,3 +43,11 @@ go build . && ./mangosteen db migrate:down
 # 或者
 migrate -database "postgres://mangosteen:123456@pg-for-go-mangosteen:5432/mangosteen_dev?sslmode=disable" -source "file://$(pwd)/config/migrations" down 1
 ```
+
+# 测试
+
+首先需要安装 MailHog 并运行：
+
+```bash
+go install github.com/mailhog/MailHog@v1.0.1 && MailHog
+```

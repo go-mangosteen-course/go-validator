@@ -9,11 +9,14 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateValidationCode(t *testing.T) {
 	r := router.New()
+	viper.Set("email.smtp.host", "localhost")
+	viper.Set("email.smtp.port", "1025")
 	email := "frankfang1990@gmail.com"
 	c := context.Background()
 	q := database.NewQuery()
