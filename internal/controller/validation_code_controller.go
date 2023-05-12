@@ -10,21 +10,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Body struct {
-	Email string `json:"email" binding:"required,email"`
+type ValidationCodeController struct {
 }
 
-// CreateValidationCode godoc
-// @Summary      用来邮箱发送验证码
-// @Description  接收邮箱地址，发送验证码
-// @Accept       json
-// @Produce      json
-// @Success      200
-// @Failure      500
-// @Router       /validation_codes [post]
+func (ctrl *ValidationCodeController) RegisterRoutes(rg *gin.RouterGroup) {
+	v1 := rg.Group("/v1")
+	v1.POST("validation_codes", ctrl.Create)
+}
 
-func CreateValidationCode(c *gin.Context) {
-	var body Body
+func (ctrl *ValidationCodeController) Create(c *gin.Context) {
+	var body struct {
+		Email string `json:"email" binding:"required,email"`
+	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(400, "参数错误")
 		return
@@ -53,6 +50,24 @@ func CreateValidationCode(c *gin.Context) {
 	}
 	c.Status(200)
 }
+
+func (ctrl *ValidationCodeController) Destroy(c *gin.Context) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (ctrl *ValidationCodeController) Update(c *gin.Context) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (ctrl *ValidationCodeController) Get(c *gin.Context) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (ctrl *ValidationCodeController) GetPaged(c *gin.Context) {
+	panic("not implemented") // TODO: Implement
+}
+
+// 帮助函数
 
 func generateDigits() (string, error) {
 	len := 4

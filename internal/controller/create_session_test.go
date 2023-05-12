@@ -26,7 +26,8 @@ func setupTest(t *testing.T) func(t *testing.T) {
 	r = gin.Default()
 	config.LoadAppConfig()
 	database.Connect()
-	r.POST("/api/v1/session", CreateSession)
+	sc := SessionController{}
+	sc.RegisterRoutes(r.Group("/api"))
 
 	q = database.NewQuery()
 	c = context.Background()
