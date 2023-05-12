@@ -1,12 +1,12 @@
-package controller_test
+package controller
 
 import (
 	"context"
 	"encoding/json"
 	"log"
+	"mangosteen/config"
 	"mangosteen/config/queries"
 	"mangosteen/internal/database"
-	"mangosteen/internal/router"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -23,7 +23,11 @@ var (
 )
 
 func setupTest(t *testing.T) func(t *testing.T) {
-	r = router.New()
+	r = gin.Default()
+	config.LoadAppConfig()
+	database.Connect()
+	r.POST("/api/v1/session", CreateSession)
+
 	q = database.NewQuery()
 	c = context.Background()
 	if err := q.DeleteAllUsers(c); err != nil {

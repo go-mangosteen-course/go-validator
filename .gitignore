@@ -2,3 +2,4 @@
 /config.json
 /config.yaml
 /config.toml
+coverage.*
