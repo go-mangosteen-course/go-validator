@@ -83,6 +83,9 @@ func Run() {
 		Use: "cover",
 		Run: func(cmd *cobra.Command, args []string) {
 			os.MkdirAll("coverage", os.ModePerm)
+			if err := exec.Command("MailHog").Start(); err != nil {
+				log.Println(err)
+			}
 			if err := exec.Command(
 				"go", "test", "-coverprofile=coverage/cover.out", "./...",
 			).Run(); err != nil {
