@@ -1,16 +1,21 @@
-package controller_test
+package controller
 
 import (
-	"mangosteen/internal/router"
+	"mangosteen/config"
+	"mangosteen/internal/database"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestPing(t *testing.T) {
-	r := router.New()
+	r := gin.Default()
+	database.Connect()
+	config.LoadAppConfig()
+	r.GET("/ping", Ping)
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/ping", nil)
 	r.ServeHTTP(w, req)
