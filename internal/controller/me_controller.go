@@ -20,7 +20,15 @@ func (ctrl *MeController) RegisterRoutes(rg *gin.RouterGroup) {
 
 func (ctrl *MeController) Get(c *gin.Context) {
 	auth := c.GetHeader("Authorization")
+	if len(auth) < 8 {
+		c.String(401, "JWT为空")
+		return
+	}
 	jwtString := auth[7:]
+	if len(jwtString) == 0 {
+		c.String(401, "JWT为空")
+		return
+	}
 	t, err := jwt_helper.Parse(jwtString)
 	if err != nil {
 		c.String(401, "无效的JWT")
