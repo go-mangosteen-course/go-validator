@@ -1,12 +1,9 @@
 package controller
 
 import (
-	"context"
 	"encoding/json"
 	"log"
-	"mangosteen/config"
 	"mangosteen/config/queries"
-	"mangosteen/internal/database"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -16,33 +13,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	r *gin.Engine
-	q *queries.Queries
-	c context.Context
-)
+func TestCreateSession(t *testing.T) {
+	teardownTest := setupTestCase(t)
+	defer teardownTest(t)
 
-func setupTest(t *testing.T) func(t *testing.T) {
-	r = gin.Default()
-	config.LoadAppConfig()
-	database.Connect()
 	sc := SessionController{}
 	sc.RegisterRoutes(r.Group("/api"))
-
-	q = database.NewQuery()
-	c = context.Background()
-	if err := q.DeleteAllUsers(c); err != nil {
-		t.Fatal(err)
-	}
-	return func(t *testing.T) {
-		database.Close()
-	}
-
-}
-
-func TestCreateSession(t *testing.T) {
-	teardownTest := setupTest(t)
-	defer teardownTest(t)
 
 	email := "1@qq.com"
 	code := "1234"
