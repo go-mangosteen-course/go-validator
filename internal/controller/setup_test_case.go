@@ -5,6 +5,7 @@ import (
 	"mangosteen/config"
 	"mangosteen/config/queries"
 	"mangosteen/internal/database"
+	"mangosteen/internal/middleware"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +19,7 @@ var (
 
 func setupTestCase(t *testing.T) func(t *testing.T) {
 	r = gin.Default()
+	r.Use(middleware.Me())
 	config.LoadAppConfig()
 	database.Connect()
 

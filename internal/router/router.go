@@ -4,6 +4,7 @@ import (
 	"mangosteen/config"
 	"mangosteen/internal/controller"
 	"mangosteen/internal/database"
+	"mangosteen/internal/middleware"
 
 	"mangosteen/docs"
 
@@ -22,6 +23,7 @@ func loadControllers() []controller.Controller {
 func New() *gin.Engine {
 	config.LoadAppConfig()
 	r := gin.Default()
+	r.Use(middleware.Me())
 	docs.SwaggerInfo.Version = "1.0"
 
 	database.Connect()
