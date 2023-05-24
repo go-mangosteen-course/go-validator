@@ -2,22 +2,20 @@ package controller
 
 import (
 	"context"
-	"mangosteen/config"
 	"mangosteen/internal/database"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
-	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateValidationCode(t *testing.T) {
-	r := gin.Default()
-	database.Connect()
-	config.LoadAppConfig()
+	teardownTest := setupTestCase(t)
+	defer teardownTest(t)
+
 	vcc := ValidationCodeController{}
 	vcc.RegisterRoutes(r.Group("/api"))
 	viper.Set("email.smtp.host", "localhost")

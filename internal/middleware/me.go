@@ -10,8 +10,16 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func Me() gin.HandlerFunc {
+func Me(whitelist []string) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		path := c.Request.URL.Path
+		index := indexOf(whitelist, path)
+
+		if index != -1 {
+			c.Next()
+			return
+		}
+
 		user, err := getMe(c)
 		if err != nil {
 			c.AbortWithStatusJSON(401, gin.H{
@@ -56,4 +64,13 @@ func getMe(c *gin.Context) (queries.User, error) {
 		return user, fmt.Errorf("无效的JWT")
 	}
 	return user, nil
+}
+
+func indexOf(strList []string, str string) int {
+	for i, s := range strList {
+		if s == str {
+			return i
+		}
+	}
+	return -1
 }

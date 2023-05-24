@@ -2,10 +2,9 @@ package controller
 
 import (
 	"context"
-	"mangosteen/config"
 	"mangosteen/config/queries"
+	"mangosteen/internal"
 	"mangosteen/internal/database"
-	"mangosteen/internal/middleware"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -19,9 +18,7 @@ var (
 
 func setupTestCase(t *testing.T) func(t *testing.T) {
 	r = gin.Default()
-	r.Use(middleware.Me())
-	config.LoadAppConfig()
-	database.Connect()
+	internal.InitRouter(r)
 
 	q = database.NewQuery()
 	c = context.Background()
