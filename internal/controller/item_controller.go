@@ -16,6 +16,20 @@ func (ctrl *ItemController) RegisterRoutes(rg *gin.RouterGroup) {
 	v1.POST("/items", ctrl.Create)
 }
 
+// CreateItem godoc
+//
+//	@Summary	创建账目
+//	@Accept		json
+//	@Produce	json
+//
+//	@Param		amount		body		int						true	"金额（单位：分）"
+//	@Param		kind		body		queries.Kind			true	"类型"
+//	@Param		happened_at	body		string					true	"发生时间"
+//	@Param		tag_ids		body		[]string				true	"标签ID列表"
+//
+//	@Success	200			{object}	api.CreateItemResponse	数据
+//	@Failure	422			{string}	string					参数错误
+//	@Router		/api/v1/items [post]
 func (ctrl *ItemController) Create(c *gin.Context) {
 	var body struct {
 		Amount     int32        `json:"amount" binding:"required"`

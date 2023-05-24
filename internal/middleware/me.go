@@ -5,6 +5,7 @@ import (
 	"mangosteen/config/queries"
 	"mangosteen/internal/database"
 	"mangosteen/internal/jwt_helper"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -13,11 +14,11 @@ import (
 func Me(whitelist []string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		path := c.Request.URL.Path
-		index := indexOf(whitelist, path)
-
-		if index != -1 {
-			c.Next()
-			return
+		for _, s := range whitelist {
+			if has := strings.HasPrefix(path, s); has {
+				c.Next()
+				return
+			}
 		}
 
 		user, err := getMe(c)
