@@ -27,6 +27,7 @@ func (ctrl *ItemController) RegisterRoutes(rg *gin.RouterGroup) {
 //	@Summary	创建账目
 //	@Accept		json
 //	@Produce	json
+//	@Security	Bearer
 //
 //	@Param		amount		body		int						true	"金额（单位：分）"	example(100)
 //	@Param		kind		body		queries.Kind			true	"类型"
@@ -77,12 +78,13 @@ func (ctrl *ItemController) Get(c *gin.Context) {
 //	@Summary	获取分页账目
 //	@Accept		json
 //	@Produce	json
+//	@Security	Bearer
 //
-//	@Param		page		query		int						false	"页码"	example(100)
-//	@Param		happened_after		query		string			false	"开始时间" example(2000-01-01T01:01:01+0800)
-//	@Param		happened_before	query		string					false	"结束时间" example(2000-01-01T01:01:01+0800)
+//	@Param		page			query		int							false	"页码"	example(100)
+//	@Param		happened_after	query		string						false	"开始时间"	example(2000-01-01T01:01:01+0800)
+//	@Param		happened_before	query		string						false	"结束时间"	example(2000-01-01T01:01:01+0800)
 //
-//	@Success	200			{object}	api.GetPagesItemsResponse	数据
+//	@Success	200				{object}	api.GetPagesItemsResponse	数据
 //	@Failure	500
 //	@Router		/api/v1/items [get]
 func (ctrl *ItemController) GetPaged(c *gin.Context) {
