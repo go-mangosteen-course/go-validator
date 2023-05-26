@@ -20,6 +20,9 @@ func (ctrl *MeController) RegisterRoutes(rg *gin.RouterGroup) {
 //	@Summary	获取当前用户
 //	@Accept		json
 //	@Produce	json
+//
+//	@Security	Bearer
+//
 //	@Success	200	{object}	api.GetMeResponse
 //	@Failure	401	{string}	JWT为空	|	无效的JWT
 //	@Router		/api/v1/me [get]

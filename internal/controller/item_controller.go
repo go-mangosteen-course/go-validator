@@ -22,7 +22,7 @@ func (ctrl *ItemController) RegisterRoutes(rg *gin.RouterGroup) {
 //	@Accept		json
 //	@Produce	json
 //
-//	@Param		amount		body		int						true	"金额（单位：分）" example(100)
+//	@Param		amount		body		int						true	"金额（单位：分）"	example(100)
 //	@Param		kind		body		queries.Kind			true	"类型"
 //	@Param		happened_at	body		string					true	"发生时间"
 //	@Param		tag_ids		body		[]string				true	"标签ID列表"

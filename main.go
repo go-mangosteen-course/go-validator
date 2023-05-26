@@ -15,7 +15,9 @@ import (
 //	@host		localhost:8080
 //	@BasePath	/
 
-//	@securityDefinitions.basic	BasicAuth(JWT)
+//	@securityDefinitions.apiKey	Bearer
+//	@in							header
+//	@name						Authorization
 
 //	@externalDocs.description	OpenAPI
 //	@externalDocs.url			https://swagger.io/resources/open-api/

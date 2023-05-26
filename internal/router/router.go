@@ -15,6 +15,7 @@ func loadControllers() []controller.Controller {
 	return []controller.Controller{
 		&controller.SessionController{},
 		&controller.ValidationCodeController{},
+		&controller.MeController{},
 	}
 }
 
