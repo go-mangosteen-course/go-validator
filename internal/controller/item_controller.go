@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"mangosteen/api"
 	"mangosteen/config/queries"
 	"mangosteen/internal/database"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +22,7 @@ func (ctrl *ItemController) RegisterRoutes(rg *gin.RouterGroup) {
 //	@Accept		json
 //	@Produce	json
 //
-//	@Param		amount		body		int						true	"金额（单位：分）"
+//	@Param		amount		body		int						true	"金额（单位：分）" example(100)
 //	@Param		kind		body		queries.Kind			true	"类型"
 //	@Param		happened_at	body		string					true	"发生时间"
 //	@Param		tag_ids		body		[]string				true	"标签ID列表"
@@ -31,12 +31,7 @@ func (ctrl *ItemController) RegisterRoutes(rg *gin.RouterGroup) {
 //	@Failure	422			{string}	string					参数错误
 //	@Router		/api/v1/items [post]
 func (ctrl *ItemController) Create(c *gin.Context) {
-	var body struct {
-		Amount     int32        `json:"amount" binding:"required"`
-		Kind       queries.Kind `json:"kind" binding:"required"`
-		HappenedAt time.Time    `json:"happened_at" binding:"required"`
-		TagIds     []int32      `json:"tag_ids" binding:"required"`
-	}
+	var body api.CreateItemRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.String(422, "参数错误")
 	}
