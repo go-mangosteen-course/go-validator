@@ -5,6 +5,8 @@ import (
 	"mangosteen/config/queries"
 	"mangosteen/internal/database"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,6 +18,7 @@ type ItemController struct {
 func (ctrl *ItemController) RegisterRoutes(rg *gin.RouterGroup) {
 	v1 := rg.Group("/v1")
 	v1.POST("/items", ctrl.Create)
+	v1.GET("/items", ctrl.GetPaged)
 	ctrl.PerPage = 10
 }
 
@@ -71,13 +74,27 @@ func (ctrl *ItemController) Get(c *gin.Context) {
 
 func (ctrl *ItemController) GetPaged(c *gin.Context) {
 	var params api.GetPagedItemsRequest
-	if err := c.ShouldBindJSON(&params); err != nil {
-		c.String(http.StatusBadRequest, "参数错误")
-		return
+	pageStr, _ := c.Params.Get("page")
+	if page, err := strconv.Atoi(pageStr); err == nil {
+		params.Page = int32(page)
 	}
-	if params.Page == 1 {
-		params.Page = 0
+	if params.Page == 0 {
+		params.Page = 1
 	}
+	happenedBefore, has := c.Params.Get("happened_before")
+	if has {
+		if t, err := time.Parse(time.RFC3339, happenedBefore); err == nil {
+			params.HappenedBefore = t
+		}
+	}
+
+	happenedAfter, has := c.Params.Get("happened_after")
+	if has {
+		if t, err := time.Parse(time.RFC3339, happenedAfter); err == nil {
+			params.HappenedAfter = t
+		}
+	}
+
 	q := database.NewQuery()
 	items, err := q.ListItems(c, queries.ListItemsParams{
 		Offset: (params.Page - 1) * ctrl.PerPage,

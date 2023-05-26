@@ -16,9 +16,12 @@ RETURNING *;
 
 -- name: ListItems :many
 SELECT * from items
-ORDER BY happend_at DESC
+ORDER BY happened_at DESC
 OFFSET $1
 LIMIT $2;
 
 -- name: CountItems :one
 SELECT count(*) FROM items;
+
+-- name: DeleteAllItems :exec
+DELETE FROM items;
