@@ -15,3 +15,14 @@ type CreateItemRequest struct {
 type CreateItemResponse struct {
 	Resource queries.Item
 }
+
+type GetPagedItemsRequest struct {
+	Page           int32     `json:"page"`
+	HappenedAfter  time.Time `json:"happened_after"`
+	HappenedBefore time.Time `json:"happened_before"`
+}
+
+type GetPagesItemsResponse struct {
+	Resources []queries.Item `json:"resources"`
+	Pager     Pager          `json:"pager"`
+}

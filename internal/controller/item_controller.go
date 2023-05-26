@@ -9,11 +9,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ItemController struct{}
+type ItemController struct {
+	PerPage int32
+}
 
 func (ctrl *ItemController) RegisterRoutes(rg *gin.RouterGroup) {
 	v1 := rg.Group("/v1")
 	v1.POST("/items", ctrl.Create)
+	ctrl.PerPage = 10
 }
 
 // CreateItem godoc
@@ -67,5 +70,35 @@ func (ctrl *ItemController) Get(c *gin.Context) {
 }
 
 func (ctrl *ItemController) GetPaged(c *gin.Context) {
-	panic("not implemented") // TODO: Implement
+	var params api.GetPagedItemsRequest
+	if err := c.ShouldBindJSON(&params); err != nil {
+		c.String(http.StatusBadRequest, "参数错误")
+		return
+	}
+	if params.Page == 1 {
+		params.Page = 0
+	}
+	q := database.NewQuery()
+	items, err := q.ListItems(c, queries.ListItemsParams{
+		Offset: (params.Page - 1) * ctrl.PerPage,
+		Limit:  ctrl.PerPage,
+	})
+	if err != nil {
+		c.String(http.StatusInternalServerError, "服务器繁忙")
+		return
+	}
+	count, err := q.CountItems(c)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "服务器繁忙")
+		return
+	}
+	c.JSON(http.StatusOK, api.GetPagesItemsResponse{
+		Resources: items,
+		Pager: api.Pager{
+			Page:    params.Page,
+			PerPage: ctrl.PerPage,
+			Count:   count,
+		},
+	})
+
 }
