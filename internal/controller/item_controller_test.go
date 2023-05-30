@@ -7,10 +7,12 @@ import (
 	"mangosteen/internal/jwt_helper"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/nav-inc/datetime"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -165,12 +167,13 @@ func TestGetBalanceWithTime(t *testing.T) {
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest(
 		"GET",
-		"/api/v1/items/balance?happened_after=2020-01-01T00:00:00+0800&happened_before=2020-01-02T00:00:00+0800",
+		"/api/v1/items/balance?happened_after="+url.QueryEscape("2020-01-01T00:00:00+0800")+
+			"&happened_before="+url.QueryEscape("2020-01-02T00:00:00+0800"),
 		nil,
 	)
 	u, _ := q.CreateUser(c, "1@qq.com")
 	for i := 0; i < 3; i++ {
-		d, _ := time.Parse(time.RFC3339, "2019-12-31T23:59:00+0800")
+		d, _ := datetime.Parse("2019-12-31T23:59:00+08:00", time.Local)
 		if _, err := q.CreateItem(c, queries.CreateItemParams{
 			UserID:     u.ID,
 			Amount:     10000,
@@ -182,7 +185,7 @@ func TestGetBalanceWithTime(t *testing.T) {
 		}
 	}
 	for i := 0; i < 3; i++ {
-		d, _ := time.Parse(time.RFC3339, "2020-01-01T12:00:00+0800")
+		d, _ := datetime.Parse("2020-01-01T12:00:00+0800", time.Local)
 		if _, err := q.CreateItem(c, queries.CreateItemParams{
 			UserID:     u.ID,
 			Amount:     10000,
@@ -194,7 +197,7 @@ func TestGetBalanceWithTime(t *testing.T) {
 		}
 	}
 	for i := 0; i < 3; i++ {
-		d, _ := time.Parse(time.RFC3339, "2020-01-10T12:00:00+0800")
+		d, _ := datetime.Parse("2020-01-10T12:00:00+0800", time.Local)
 		if _, err := q.CreateItem(c, queries.CreateItemParams{
 			UserID:     u.ID,
 			Amount:     10000,
