@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"mangosteen/api"
 	"mangosteen/config/queries"
 	"mangosteen/internal/database"
@@ -19,6 +20,7 @@ func (ctrl *ItemController) RegisterRoutes(rg *gin.RouterGroup) {
 	v1 := rg.Group("/v1")
 	v1.POST("/items", ctrl.Create)
 	v1.GET("/items", ctrl.GetPaged)
+	v1.GET("/items/balance", ctrl.GetBalance)
 	ctrl.PerPage = 10
 }
 
@@ -71,6 +73,40 @@ func (ctrl *ItemController) Update(c *gin.Context) {
 
 func (ctrl *ItemController) Get(c *gin.Context) {
 	panic("not implemented") // TODO: Implement
+}
+
+func (ctrl *ItemController) GetBalance(c *gin.Context) {
+	happenedAfterString, _ := c.Params.Get("happened_after")
+	happenedBeforeString, _ := c.Params.Get("happened_after")
+	happenedAfter, err := time.Parse(time.RFC3339, happenedAfterString)
+	if err != nil {
+		happenedAfter = time.Now().AddDate(-100, 0, 0)
+	}
+	happenedBefore, err := time.Parse(time.RFC3339, happenedBeforeString)
+	if err != nil {
+		happenedBefore = time.Now().AddDate(1, 0, 0)
+	}
+
+	q := database.NewQuery()
+	items, err := q.ListItemsHappenedBetween(c, queries.ListItemsHappenedBetweenParams{
+		HappenedAfter:  happenedAfter,
+		HappenedBefore: happenedBefore,
+	})
+	if err != nil {
+		log.Printf("list items error: %v", err)
+		c.String(http.StatusInternalServerError, "服务器繁忙")
+		return
+	}
+	var r api.GetBalanceResponse
+	for _, item := range items {
+		if item.Kind == queries.KindInCome {
+			r.Income += int(item.Amount)
+		} else {
+			r.Expenses += int(item.Amount)
+		}
+	}
+	r.Balance = r.Income - r.Expenses
+	c.JSON(http.StatusOK, r)
 }
 
 // GetPagesItems godoc

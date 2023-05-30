@@ -26,3 +26,9 @@ type GetPagesItemsResponse struct {
 	Resources []queries.Item `json:"resources"`
 	Pager     Pager          `json:"pager"`
 }
+
+type GetBalanceResponse struct {
+	Income   int `json:"income"`
+	Expenses int `json:"expenses"`
+	Balance  int `json:"balance"`
+}
