@@ -17,6 +17,7 @@ func loadControllers() []controller.Controller {
 		&controller.ValidationCodeController{},
 		&controller.MeController{},
 		&controller.ItemController{},
+		&controller.TagController{},
 	}
 }
 
