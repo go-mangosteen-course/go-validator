@@ -44,4 +44,5 @@ func TestCreateTag(t *testing.T) {
 	}
 	assert.Equal(t, u.ID, j.Resource.UserID)
 	assert.Equal(t, "通勤", j.Resource.Name)
+	assert.Nil(t, j.Resource.DeletedAt)
 }

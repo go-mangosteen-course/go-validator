@@ -1,1 +1,1 @@
-swag init && go build . && ./mangosteen server
+swag init --parseDependency && go build . && ./mangosteen server

@@ -7,3 +7,6 @@ type CreateTagRequest struct {
 	Sign string       `json:"sign" binding:"required"`
 	Kind queries.Kind `json:"kind" binding:"required"`
 }
+type CreateTagResponse struct {
+	Resource queries.Tag `json:"resource"`
+}
