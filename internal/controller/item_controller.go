@@ -79,8 +79,8 @@ func (ctrl *ItemController) Get(c *gin.Context) {
 
 func (ctrl *ItemController) GetBalance(c *gin.Context) {
 	query := c.Request.URL.Query()
-	happenedAfterString := query["happened_after"][0]
-	happenedBeforeString := query["happened_before"][0]
+	happenedAfterString := query.Get("happened_after")
+	happenedBeforeString := query.Get("happened_before")
 	happenedAfter, err := datetime.Parse(happenedAfterString, time.Local)
 	if err != nil {
 		happenedAfter = time.Now().AddDate(-100, 0, 0)

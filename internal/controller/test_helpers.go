@@ -19,7 +19,9 @@ var (
 )
 
 func setupTestCase(t *testing.T) func(t *testing.T) {
-	r = gin.Default()
+	gin.SetMode(gin.ReleaseMode)
+	r = gin.New()
+	r.Use(gin.Recovery())
 	internal.InitRouter(r)
 
 	q = database.NewQuery()
