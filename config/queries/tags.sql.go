@@ -7,6 +7,8 @@ package queries
 
 import (
 	"context"
+
+	null_v4 "gopkg.in/guregu/null.v4"
 )
 
 const createTag = `-- name: CreateTag :one
@@ -27,11 +29,11 @@ RETURNING id, user_id, name, sign, kind, deleted_at, x, created_at, updated_at
 `
 
 type CreateTagParams struct {
-	UserID int32   `json:"user_id"`
-	Name   string  `json:"name"`
-	Sign   string  `json:"sign"`
-	Kind   string  `json:"kind"`
-	X      *string `json:"x"`
+	UserID int32          `json:"user_id"`
+	Name   string         `json:"name"`
+	Sign   string         `json:"sign"`
+	Kind   string         `json:"kind"`
+	X      null_v4.String `json:"x"`
 }
 
 func (q *Queries) CreateTag(ctx context.Context, arg CreateTagParams) (Tag, error) {

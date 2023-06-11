@@ -6,6 +6,8 @@ package queries
 
 import (
 	"time"
+
+	null_v4 "gopkg.in/guregu/null.v4"
 )
 
 type Item struct {
@@ -20,15 +22,15 @@ type Item struct {
 }
 
 type Tag struct {
-	ID        int32      `json:"id"`
-	UserID    int32      `json:"user_id"`
-	Name      string     `json:"name"`
-	Sign      string     `json:"sign"`
-	Kind      string     `json:"kind"`
-	DeletedAt *time.Time `json:"deleted_at"`
-	X         *string    `json:"x"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
+	ID        int32          `json:"id"`
+	UserID    int32          `json:"user_id"`
+	Name      string         `json:"name"`
+	Sign      string         `json:"sign"`
+	Kind      string         `json:"kind"`
+	DeletedAt *time.Time     `json:"deleted_at"`
+	X         null_v4.String `json:"x"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
 }
 
 type User struct {

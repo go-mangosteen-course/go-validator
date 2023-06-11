@@ -29,7 +29,7 @@ func TestCreateTag(t *testing.T) {
 			"name": "通勤",
 			"kind": "expenses",
 			"sign": "👟",
-			"x": null
+			"x": "frank"
 		}`),
 	)
 
@@ -48,6 +48,8 @@ func TestCreateTag(t *testing.T) {
 	}
 	assert.Equal(t, u.ID, j.Resource.UserID)
 	assert.Equal(t, "通勤", j.Resource.Name)
+	assert.Equal(t, "frank", j.Resource.X.String)
+	assert.Equal(t, true, j.Resource.X.Valid)
 	assert.Nil(t, j.Resource.DeletedAt)
 }
 
