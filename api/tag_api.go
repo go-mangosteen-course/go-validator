@@ -2,15 +2,12 @@ package api
 
 import (
 	"mangosteen/config/queries"
-
-	"gopkg.in/guregu/null.v4"
 )
 
 type CreateTagRequest struct {
-	Name string      `json:"name" binding:"required"`
-	Sign string      `json:"sign" binding:"required"`
-	Kind string      `json:"kind" binding:"required"`
-	X    null.String `json:"x"`
+	Name string `json:"name" binding:"required"`
+	Sign string `json:"sign" binding:"required"`
+	Kind string `json:"kind" binding:"required"`
 }
 type UpdateTagRequest struct {
 	Name string `json:"name"`

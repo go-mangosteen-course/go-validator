@@ -3,14 +3,12 @@ INSERT INTO tags (
   user_id,
   name,
   sign,
-  kind,
-  x
+  kind
 ) VALUES (
   $1,
   $2,
   $3,
-  $4,
-  $5
+  $4
 )
 RETURNING *;
 

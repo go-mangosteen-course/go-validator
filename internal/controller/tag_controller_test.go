@@ -28,8 +28,7 @@ func TestCreateTag(t *testing.T) {
 		strings.NewReader(`{
 			"name": "通勤",
 			"kind": "expenses",
-			"sign": "👟",
-			"x": "frank"
+			"sign": "👟"
 		}`),
 	)
 
@@ -48,8 +47,6 @@ func TestCreateTag(t *testing.T) {
 	}
 	assert.Equal(t, u.ID, j.Resource.UserID)
 	assert.Equal(t, "通勤", j.Resource.Name)
-	assert.Equal(t, "frank", j.Resource.X.String)
-	assert.Equal(t, true, j.Resource.X.Valid)
 	assert.Nil(t, j.Resource.DeletedAt)
 }
 
