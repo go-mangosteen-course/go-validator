@@ -28,7 +28,8 @@ func TestCreateTag(t *testing.T) {
 		strings.NewReader(`{
 			"name": "通勤",
 			"kind": "expenses",
-			"sign": "👟"
+			"sign": "👟",
+			"x" :"frank"
 		}`),
 	)
 

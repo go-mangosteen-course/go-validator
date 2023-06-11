@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS tags (
   sign VARCHAR(10) NOT NULL,
   kind VARCHAR(100) NOT NULL,
   deleted_at TIMESTAMP,
+  x VARCHAR(255),
   created_at TIMESTAMP NOT NULL DEFAULT now(),
   updated_at TIMESTAMP NOT NULL DEFAULT now()
 );

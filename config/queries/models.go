@@ -6,6 +6,8 @@ package queries
 
 import (
 	"time"
+
+	"mangosteen/config"
 )
 
 type Item struct {
@@ -20,14 +22,15 @@ type Item struct {
 }
 
 type Tag struct {
-	ID        int32      `json:"id"`
-	UserID    int32      `json:"user_id"`
-	Name      string     `json:"name"`
-	Sign      string     `json:"sign"`
-	Kind      string     `json:"kind"`
-	DeletedAt *time.Time `json:"deleted_at"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
+	ID        int32               `json:"id"`
+	UserID    int32               `json:"user_id"`
+	Name      string              `json:"name"`
+	Sign      string              `json:"sign"`
+	Kind      string              `json:"kind"`
+	DeletedAt *time.Time          `json:"deleted_at"`
+	X         config.MyNullString `json:"x"`
+	CreatedAt time.Time           `json:"created_at"`
+	UpdatedAt time.Time           `json:"updated_at"`
 }
 
 type User struct {

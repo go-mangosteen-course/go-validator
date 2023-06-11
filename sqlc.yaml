@@ -16,3 +16,9 @@ sql:
             import: "time"
             type: "Time"
             pointer: true
+        - db_type: "pg_catalog.varchar"
+          nullable: true
+          go_type:
+            import: "mangosteen/config"
+            type: "MyNullString"
+            pointer: false
