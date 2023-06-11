@@ -7,8 +7,6 @@ package queries
 
 import (
 	"context"
-
-	"mangosteen/config"
 )
 
 const createTag = `-- name: CreateTag :one
@@ -29,11 +27,11 @@ RETURNING id, user_id, name, sign, kind, deleted_at, x, created_at, updated_at
 `
 
 type CreateTagParams struct {
-	UserID int32               `json:"user_id"`
-	Name   string              `json:"name"`
-	Sign   string              `json:"sign"`
-	Kind   string              `json:"kind"`
-	X      config.MyNullString `json:"x"`
+	UserID int32   `json:"user_id"`
+	Name   string  `json:"name"`
+	Sign   string  `json:"sign"`
+	Kind   string  `json:"kind"`
+	X      *string `json:"x"`
 }
 
 func (q *Queries) CreateTag(ctx context.Context, arg CreateTagParams) (Tag, error) {

@@ -1,15 +1,14 @@
 package api
 
 import (
-	"mangosteen/config"
 	"mangosteen/config/queries"
 )
 
 type CreateTagRequest struct {
-	Name string              `json:"name" binding:"required"`
-	Sign string              `json:"sign" binding:"required"`
-	Kind string              `json:"kind" binding:"required"`
-	X    config.MyNullString `json:"x"`
+	Name string  `json:"name" binding:"required"`
+	Sign string  `json:"sign" binding:"required"`
+	Kind string  `json:"kind" binding:"required"`
+	X    *string `json:"x"`
 }
 type UpdateTagRequest struct {
 	Name string `json:"name"`

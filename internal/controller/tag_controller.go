@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"mangosteen/api"
 	"mangosteen/config/queries"
 	"mangosteen/internal/database"
@@ -50,6 +51,11 @@ func (ctrl *TagController) Create(c *gin.Context) {
 		Kind:   body.Kind,
 		X:      body.X,
 	})
+	if body.X != nil {
+		if *body.X == "hi" {
+			fmt.Println("hi")
+		}
+	}
 	if err != nil {
 		c.String(500, err.Error())
 		return

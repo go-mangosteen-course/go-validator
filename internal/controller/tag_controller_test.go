@@ -29,7 +29,7 @@ func TestCreateTag(t *testing.T) {
 			"name": "通勤",
 			"kind": "expenses",
 			"sign": "👟",
-			"x" :"frank"
+			"x": null
 		}`),
 	)
 
