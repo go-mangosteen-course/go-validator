@@ -28,7 +28,7 @@ type CreateTagParams struct {
 	UserID int32  `json:"user_id"`
 	Name   string `json:"name"`
 	Sign   string `json:"sign"`
-	Kind   Kind   `json:"kind"`
+	Kind   string `json:"kind"`
 }
 
 func (q *Queries) CreateTag(ctx context.Context, arg CreateTagParams) (Tag, error) {
@@ -68,7 +68,7 @@ type UpdateTagParams struct {
 	UserID int32  `json:"user_id"`
 	Name   string `json:"name"`
 	Sign   string `json:"sign"`
-	Kind   Kind   `json:"kind"`
+	Kind   string `json:"kind"`
 }
 
 func (q *Queries) UpdateTag(ctx context.Context, arg UpdateTagParams) (Tag, error) {

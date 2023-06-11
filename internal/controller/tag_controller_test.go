@@ -62,7 +62,7 @@ func TestUpdateTag(t *testing.T) {
 		UserID: u.ID,
 		Name:   "通勤",
 		Sign:   "🎈",
-		Kind:   queries.KindExpenses,
+		Kind:   "expenses",
 	})
 	if err != nil {
 		t.Error(err)

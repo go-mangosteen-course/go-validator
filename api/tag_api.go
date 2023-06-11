@@ -3,14 +3,14 @@ package api
 import "mangosteen/config/queries"
 
 type CreateTagRequest struct {
-	Name string       `json:"name" binding:"required"`
-	Sign string       `json:"sign" binding:"required"`
-	Kind queries.Kind `json:"kind" binding:"required"`
+	Name string `json:"name" binding:"required"`
+	Sign string `json:"sign" binding:"required"`
+	Kind string `json:"kind" binding:"required"`
 }
 type UpdateTagRequest struct {
-	Name string       `json:"name"`
-	Sign string       `json:"sign"`
-	Kind queries.Kind `json:"kind"`
+	Name string `json:"name"`
+	Sign string `json:"sign"`
+	Kind string `json:"kind"`
 }
 type CreateTagResponse struct {
 	Resource queries.Tag `json:"resource"`

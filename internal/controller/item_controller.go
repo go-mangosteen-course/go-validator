@@ -102,7 +102,7 @@ func (ctrl *ItemController) GetBalance(c *gin.Context) {
 	}
 	var r api.GetBalanceResponse
 	for _, item := range items {
-		if item.Kind == queries.KindInCome {
+		if item.Kind == "in_come" {
 			r.Income += int(item.Amount)
 		} else {
 			r.Expenses += int(item.Amount)
