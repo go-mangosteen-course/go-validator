@@ -29,7 +29,7 @@ WHERE id = @id;
 
 -- name: FindTag :one
 SELECT * FROM tags
-WHERE id = @id AND deleted_at IS NULL;
+WHERE id = @id AND user_id = @user_id AND deleted_at IS NULL;
 -- name: ListTags :many
 SELECT * FROM tags
 WHERE

@@ -21,6 +21,7 @@ func (ctrl *TagController) RegisterRoutes(rg *gin.RouterGroup) {
 	v1.PATCH("/tags/:id", ctrl.Update)
 	v1.DELETE("/tags/:id", ctrl.Destroy)
 	v1.GET("/tags", ctrl.GetPaged)
+	v1.GET("/tags/:id", ctrl.Get)
 }
 
 // CreateTag godoc
@@ -110,7 +111,28 @@ func (ctrl *TagController) Update(c *gin.Context) {
 }
 
 func (ctrl *TagController) Get(c *gin.Context) {
-	panic("not implemented") // TODO: Implement
+	me, _ := c.Get("me")
+	user, _ := me.(queries.User)
+	idString, has := c.Params.Get("id")
+	if !has {
+		c.String(422, "参数错误")
+		return
+	}
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		c.String(422, "参数错误")
+		return
+	}
+	q := database.NewQuery()
+	tag, err := q.FindTag(c, queries.FindTagParams{
+		UserID: user.ID,
+		ID:     int32(id),
+	})
+	if err != nil {
+		c.Status(http.StatusNotFound)
+		return
+	}
+	c.JSON(http.StatusOK, api.GetTagResponse{Resource: tag})
 }
 
 func (ctrl *TagController) GetPaged(c *gin.Context) {

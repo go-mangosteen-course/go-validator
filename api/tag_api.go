@@ -12,6 +12,9 @@ type GetPagesTagsResponse struct {
 	Resources []queries.Tag `json:"resources"`
 	Pager     Pager         `json:"pager"`
 }
+type GetTagResponse struct {
+	Resource queries.Tag `json:"resource"`
+}
 type CreateTagRequest struct {
 	Name string `json:"name" binding:"required"`
 	Sign string `json:"sign" binding:"required"`
