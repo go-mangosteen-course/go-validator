@@ -30,5 +30,11 @@ WHERE id = @id;
 -- name: FindTag :one
 SELECT * FROM tags
 WHERE id = @id AND deleted_at IS NULL;
-
+-- name: ListTags :many
+SELECT * FROM tags
+WHERE
+kind = @kind AND user_id = @user_id AND deleted_at IS NULL
+ORDER BY created_at DESC
+OFFSET $1
+LIMIT $2;
 

@@ -84,6 +84,59 @@ func (q *Queries) FindTag(ctx context.Context, id int32) (Tag, error) {
 	return i, err
 }
 
+const listTags = `-- name: ListTags :many
+SELECT id, user_id, name, sign, kind, deleted_at, created_at, updated_at FROM tags
+WHERE
+kind = $3 AND user_id = $4 AND deleted_at IS NULL
+ORDER BY created_at DESC
+OFFSET $1
+LIMIT $2
+`
+
+type ListTagsParams struct {
+	Offset int32  `json:"offset"`
+	Limit  int32  `json:"limit"`
+	Kind   string `json:"kind"`
+	UserID int32  `json:"user_id"`
+}
+
+func (q *Queries) ListTags(ctx context.Context, arg ListTagsParams) ([]Tag, error) {
+	rows, err := q.db.QueryContext(ctx, listTags,
+		arg.Offset,
+		arg.Limit,
+		arg.Kind,
+		arg.UserID,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Tag
+	for rows.Next() {
+		var i Tag
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.Sign,
+			&i.Kind,
+			&i.DeletedAt,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateTag = `-- name: UpdateTag :one
 UPDATE tags
 SET

@@ -83,7 +83,7 @@ func TestCreateItemWithError(t *testing.T) {
 	assert.Equal(t, 422, w.Code)
 }
 
-func TestGetPagesItems(t *testing.T) {
+func TestGetPagedItems(t *testing.T) {
 	done := setupTestCase(t)
 	defer done(t)
 

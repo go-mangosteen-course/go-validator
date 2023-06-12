@@ -4,6 +4,14 @@ import (
 	"mangosteen/config/queries"
 )
 
+type GetPagedTagsRequest struct {
+	Page int32  `json:"page"`
+	Kind string `json:"kind"`
+}
+type GetPagesTagsResponse struct {
+	Resources []queries.Tag `json:"resources"`
+	Pager     Pager         `json:"pager"`
+}
 type CreateTagRequest struct {
 	Name string `json:"name" binding:"required"`
 	Sign string `json:"sign" binding:"required"`

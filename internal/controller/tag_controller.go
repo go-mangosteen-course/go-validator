@@ -11,13 +11,16 @@ import (
 )
 
 type TagController struct {
+	PerPage int32
 }
 
 func (ctrl *TagController) RegisterRoutes(rg *gin.RouterGroup) {
+	ctrl.PerPage = 20
 	v1 := rg.Group("/v1")
 	v1.POST("/tags", ctrl.Create)
 	v1.PATCH("/tags/:id", ctrl.Update)
 	v1.DELETE("/tags/:id", ctrl.Destroy)
+	v1.GET("/tags", ctrl.GetPaged)
 }
 
 // CreateTag godoc
@@ -111,5 +114,48 @@ func (ctrl *TagController) Get(c *gin.Context) {
 }
 
 func (ctrl *TagController) GetPaged(c *gin.Context) {
-	panic("not implemented") // TODO: Implement
+	me, _ := c.Get("me")
+	user, ok := me.(queries.User)
+	if !ok {
+		c.Status(http.StatusUnauthorized)
+	}
+	var params api.GetPagedTagsRequest
+	pageStr, _ := c.Params.Get("page")
+	if page, err := strconv.Atoi(pageStr); err == nil {
+		params.Page = int32(page)
+	}
+	if params.Page == 0 {
+		params.Page = 1
+	}
+	kind, _ := c.Params.Get("kind")
+	if kind == "" {
+		kind = "expenses"
+	}
+	params.Kind = kind
+
+	q := database.NewQuery()
+	tags, err := q.ListTags(c, queries.ListTagsParams{
+		Offset: (params.Page - 1) * ctrl.PerPage,
+		Limit:  ctrl.PerPage,
+		Kind:   params.Kind,
+		UserID: user.ID,
+	})
+	if err != nil {
+		c.String(http.StatusInternalServerError, "服务器繁忙")
+		return
+	}
+	count, err := q.CountItems(c)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "服务器繁忙")
+		return
+	}
+	c.JSON(http.StatusOK, api.GetPagesTagsResponse{
+		Resources: tags,
+		Pager: api.Pager{
+			Page:    params.Page,
+			PerPage: ctrl.PerPage,
+			Count:   count,
+		},
+	})
+
 }
