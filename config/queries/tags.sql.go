@@ -52,6 +52,38 @@ func (q *Queries) CreateTag(ctx context.Context, arg CreateTagParams) (Tag, erro
 	return i, err
 }
 
+const deleteTag = `-- name: DeleteTag :exec
+UPDATE tags
+SET deleted_at = now()
+WHERE id = $1
+`
+
+func (q *Queries) DeleteTag(ctx context.Context, id int32) error {
+	_, err := q.db.ExecContext(ctx, deleteTag, id)
+	return err
+}
+
+const findTag = `-- name: FindTag :one
+SELECT id, user_id, name, sign, kind, deleted_at, created_at, updated_at FROM tags
+WHERE id = $1 AND deleted_at IS NULL
+`
+
+func (q *Queries) FindTag(ctx context.Context, id int32) (Tag, error) {
+	row := q.db.QueryRowContext(ctx, findTag, id)
+	var i Tag
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Name,
+		&i.Sign,
+		&i.Kind,
+		&i.DeletedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const updateTag = `-- name: UpdateTag :one
 UPDATE tags
 SET

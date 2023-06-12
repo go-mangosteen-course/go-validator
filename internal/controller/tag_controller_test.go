@@ -94,3 +94,37 @@ func TestUpdateTag(t *testing.T) {
 	assert.Equal(t, "expenses", j.Resource.Kind)
 	assert.Nil(t, j.Resource.DeletedAt)
 }
+
+func TestDeleteTag(t *testing.T) {
+	done := setupTestCase(t)
+	defer done(t)
+
+	ctrl := TagController{}
+	ctrl.RegisterRoutes(r.Group("/api"))
+
+	u, _ := q.CreateUser(c, "1@qq.com")
+	tag, err := q.CreateTag(context.Background(), queries.CreateTagParams{
+		UserID: u.ID,
+		Name:   "通勤",
+		Sign:   "🎈",
+		Kind:   "expenses",
+	})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest(
+		"DELETE",
+		fmt.Sprintf("/api/v1/tags/%d", tag.ID),
+		nil,
+	)
+
+	signIn(t, u.ID, req)
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	_, err = q.FindTag(c, tag.ID)
+	assert.Error(t, err)
+}

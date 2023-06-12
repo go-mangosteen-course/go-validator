@@ -17,6 +17,7 @@ func (ctrl *TagController) RegisterRoutes(rg *gin.RouterGroup) {
 	v1 := rg.Group("/v1")
 	v1.POST("/tags", ctrl.Create)
 	v1.PATCH("/tags/:id", ctrl.Update)
+	v1.DELETE("/tags/:id", ctrl.Destroy)
 }
 
 // CreateTag godoc
@@ -57,7 +58,23 @@ func (ctrl *TagController) Create(c *gin.Context) {
 }
 
 func (ctrl *TagController) Destroy(c *gin.Context) {
-	panic("not implemented") // TODO: Implement
+	idString, has := c.Params.Get("id")
+	if has == false {
+		c.String(422, "参数错误")
+		return
+	}
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		c.String(422, "参数错误")
+		return
+	}
+	q := database.NewQuery()
+	err = q.DeleteTag(c, int32(id))
+	if err != nil {
+		c.String(500, err.Error())
+		return
+	}
+	c.Status(http.StatusOK)
 }
 
 func (ctrl *TagController) Update(c *gin.Context) {
