@@ -31,12 +31,12 @@ func (ctrl *TagController) RegisterRoutes(rg *gin.RouterGroup) {
 //	@Produce	json
 //	@Security	Bearer
 //
-//	@Param		name		body		string						true	"标签名"	SchemaExample(通勤)
-//	@Param		sign	  body		string					  true	"符号"    SchemaExample(👟)
-//	@Param		kind		body		queries.Kind			true	"类型"
+//	@Param		name	body		string					true	"标签名"	SchemaExample(通勤)
+//	@Param		sign	body		string					true	"符号"	SchemaExample(👟)
+//	@Param		kind	body		string			true	"类型"
 //
-//	@Success	200			{object}	api.CreateTagResponse	数据
-//	@Failure	422			{string}	string					参数错误
+//	@Success	200		{object}	api.CreateTagResponse	数据
+//	@Failure	422		{string}	string					参数错误
 //	@Router		/api/v1/tags [post]
 func (ctrl *TagController) Create(c *gin.Context) {
 	var body api.CreateTagRequest
@@ -61,9 +61,22 @@ func (ctrl *TagController) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, api.CreateTagResponse{Resource: tag})
 }
 
+// DestroyTag godoc
+//
+//	@Summary	删除标签
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//
+//	@Param		id	path	string	true	"标签ID"
+//
+//	@Success	200
+//	@Failure	422	{string}	string	参数错误
+//	@Failure	500	{string}	string	服务器错误
+//	@Router		/api/v1/tags/{id} [delete]
 func (ctrl *TagController) Destroy(c *gin.Context) {
 	idString, has := c.Params.Get("id")
-	if has == false {
+	if !has {
 		c.String(422, "参数错误")
 		return
 	}
@@ -81,6 +94,22 @@ func (ctrl *TagController) Destroy(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
+// UpdateTag godoc
+//
+//	@Summary	更新标签
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//
+//	@Param		id		path		string					true	"标签ID"
+//	@Param		name	body		string					true	"标签名"	SchemaExample(通勤)
+//	@Param		sign	body		string					true	"符号"	SchemaExample(👟)
+//	@Param		kind	body		string			true	"类型"
+//
+//	@Success	200		{object}	api.UpdateTagResponse	数据
+//	@Failure	422		{string}	string					参数错误
+//	@Failure	500		{string}	string					服务器错误
+//	@Router		/api/v1/tags/{id} [patch]
 func (ctrl *TagController) Update(c *gin.Context) {
 	var body api.UpdateTagRequest
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -110,6 +139,19 @@ func (ctrl *TagController) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, api.UpdateTagResponse{Resource: tag})
 }
 
+// GetTag godoc
+//
+//	@Summary	获取标签
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//
+//	@Param		id	path		string				true	"标签ID"
+//
+//	@Success	200	{object}	api.GetTagResponse	数据
+//	@Failure	422	{string}	string				参数错误
+//	@Failure	404	{string}	string				找不到资源
+//	@Router		/api/v1/tags/{id} [get]
 func (ctrl *TagController) Get(c *gin.Context) {
 	me, _ := c.Get("me")
 	user, _ := me.(queries.User)
@@ -135,6 +177,19 @@ func (ctrl *TagController) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, api.GetTagResponse{Resource: tag})
 }
 
+// GetPagedTag godoc
+//
+//	@Summary	获取标签列表
+//	@Accept		json
+//	@Produce	json
+//	@Security	Bearer
+//
+//	@Param		page	query		number						false "页码"
+//	@Param		kind	query		string						false "类型"
+//
+//	@Success	200		{object}	api.GetPagesTagsResponse	数据
+//	@Failure	500		{string}	string						服务器错误
+//	@Router		/api/v1/tags [get]
 func (ctrl *TagController) GetPaged(c *gin.Context) {
 	me, _ := c.Get("me")
 	user, ok := me.(queries.User)
