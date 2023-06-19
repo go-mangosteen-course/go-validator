@@ -266,6 +266,10 @@ func (ctrl *ItemController) GetSummary(c *gin.Context) {
 				})
 			}
 		}
+		sort.Slice(res.Groups, func(i, j int) bool {
+			return res.Groups[i].TagID < res.Groups[j].TagID
+		})
+
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.String(http.StatusBadRequest, "参数错误")
