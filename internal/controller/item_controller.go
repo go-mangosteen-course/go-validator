@@ -22,6 +22,7 @@ func (ctrl *ItemController) RegisterRoutes(rg *gin.RouterGroup) {
 	v1.POST("/items", ctrl.Create)
 	v1.GET("/items", ctrl.GetPaged)
 	v1.GET("/items/balance", ctrl.GetBalance)
+	v1.GET("/items/summary", ctrl.GetSummary)
 	ctrl.PerPage = 10
 }
 
@@ -172,4 +173,14 @@ func (ctrl *ItemController) GetPaged(c *gin.Context) {
 		},
 	})
 
+}
+
+func (ctrl *ItemController) GetSummary(c *gin.Context) {
+	var query api.GetSummaryRequest
+	err := c.BindQuery(&query)
+	if err != nil {
+		c.String(http.StatusBadRequest, "参数错误")
+		return
+	}
+	c.Status(200)
 }

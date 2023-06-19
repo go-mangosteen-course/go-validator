@@ -220,3 +220,41 @@ func TestGetBalanceWithTime(t *testing.T) {
 	assert.Equal(t, 0, j.Income)
 	assert.Equal(t, -10000*3, j.Balance)
 }
+
+func TestGetSummary(t *testing.T) {
+	done := setupTestCase(t)
+	defer done(t)
+
+	ctrl := ItemController{}
+	ctrl.RegisterRoutes(r.Group("/api"))
+
+	qs := url.Values{
+		"happened_after":  []string{"2020-01-01T00:00:00+08:00"},
+		"happened_before": []string{"2020-02-01T00:00:00+08:00"},
+		"kind":            []string{"expenses"},
+		"group_by":        []string{"happened_at"},
+	}.Encode()
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest(
+		"GET",
+		"/api/v1/items/summary?"+qs,
+		nil,
+	)
+	u, _ := q.CreateUser(c, "1@qq.com")
+	for i := 0; i < 3; i++ {
+		d, _ := time.Parse(time.RFC3339, "2020-01-15T00:00:00+08:00")
+		if _, err := q.CreateItem(c, queries.CreateItemParams{
+			UserID:     u.ID,
+			Amount:     10000,
+			Kind:       "expenses",
+			TagIds:     []int32{1},
+			HappenedAt: d,
+		}); err != nil {
+			t.Error(err)
+		}
+	}
+	signIn(t, u.ID, req)
+	r.ServeHTTP(w, req)
+	assert.Equal(t, 200, w.Code)
+}

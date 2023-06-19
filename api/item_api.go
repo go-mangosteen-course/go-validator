@@ -32,3 +32,10 @@ type GetBalanceResponse struct {
 	Expenses int `json:"expenses"`
 	Balance  int `json:"balance"`
 }
+
+type GetSummaryRequest struct {
+	HappenedAfter  time.Time `form:"happened_after"`
+	HappenedBefore time.Time `form:"happened_before"`
+	Kind           string    `form:"kind"`
+	GroupBy        string    `form:"group_by"`
+}
