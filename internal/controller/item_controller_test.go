@@ -229,9 +229,7 @@ func TestGetSummary(t *testing.T) {
 	ctrl.RegisterRoutes(r.Group("/api"))
 
 	qs := url.Values{
-		"happened_after":  []string{"2020-01-01T00:00:00+08:00"},
-		"happened_before": []string{"2020-02-01T00:00:00+08:00"},
-		"group_by":        []string{"happened_at"},
+		"kind": []string{"xxx"},
 	}.Encode()
 
 	w := httptest.NewRecorder()

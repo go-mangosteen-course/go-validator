@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"log"
 	"mangosteen/api"
 	"mangosteen/config/queries"
@@ -181,15 +180,18 @@ func (ctrl *ItemController) GetPaged(c *gin.Context) {
 func (ctrl *ItemController) GetSummary(c *gin.Context) {
 	var query api.GetSummaryRequest
 	if err := c.BindQuery(&query); err != nil {
-		errMsg := ""
+		r := api.NewErrorResponse()
 		switch x := err.(type) {
 		case validator.ValidationErrors:
 			for _, ve := range x {
 				tag := ve.Tag()
-				filed := ve.Field()
-				errMsg += fmt.Sprintf("%s %s.", filed, tag)
+				field := ve.Field()
+				if r.Errors[field] == nil {
+					r.Errors[field] = []string{}
+				}
+				r.Errors[field] = append(r.Errors[field], tag)
 			}
-			c.Writer.WriteString(errMsg)
+			c.JSON(http.StatusUnprocessableEntity, r)
 		default:
 			c.Status(http.StatusInternalServerError)
 		}
