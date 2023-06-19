@@ -270,7 +270,7 @@ func TestGetSummary(t *testing.T) {
 	r.ServeHTTP(w, req)
 	assert.Equal(t, 200, w.Code)
 	body := w.Body.String()
-	var j api.GetSummaryResponse
+	var j api.GetSummaryByHappenedAtResponse
 	json.Unmarshal([]byte(body), &j)
 	assert.Equal(t, 60000, j.Total)
 	assert.Equal(t, 2, len(j.Groups))

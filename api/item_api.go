@@ -37,15 +37,39 @@ type GetSummaryRequest struct {
 	HappenedAfter  time.Time `form:"happened_after" binding:"required"`
 	HappenedBefore time.Time `form:"happened_before" binding:"required"`
 	Kind           string    `form:"kind" binding:"required,oneof=expenses in_come"`
-	GroupBy        string    `form:"group_by" binding:"required"`
+	GroupBy        string    `form:"group_by" binding:"required,oneof=happened_at tag_id"`
 }
 
-type GetSummaryResponse struct {
+type GetSummaryByHappenedAtResponse struct {
 	Groups []SummaryGroupByHappenedAt `json:"groups"`
 	Total  int                        `json:"total"`
+}
+
+func NewGetSummaryByHappenedAtResponse() GetSummaryByHappenedAtResponse {
+	return GetSummaryByHappenedAtResponse{
+		Groups: []SummaryGroupByHappenedAt{},
+		Total:  0,
+	}
+}
+
+type GetSummaryByTagIDResponse struct {
+	Groups []SummaryGroupByTagID `json:"groups"`
+	Total  int                   `json:"total"`
+}
+
+func NewGetSummaryByTagIDResponse() GetSummaryByTagIDResponse {
+	return GetSummaryByTagIDResponse{
+		Groups: []SummaryGroupByTagID{},
+		Total:  0,
+	}
 }
 
 type SummaryGroupByHappenedAt struct {
 	HappenedAt string `json:"happened_at"`
 	Amount     int    `json:"amount"`
+}
+type SummaryGroupByTagID struct {
+	TagID  int32       `json:"tag_id"`
+	Tag    queries.Tag `json:"tag"`
+	Amount int         `json:"amount"`
 }
