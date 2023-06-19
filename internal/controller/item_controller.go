@@ -177,8 +177,7 @@ func (ctrl *ItemController) GetPaged(c *gin.Context) {
 
 func (ctrl *ItemController) GetSummary(c *gin.Context) {
 	var query api.GetSummaryRequest
-	err := c.BindQuery(&query)
-	if err != nil {
+	if err := c.BindQuery(&query); err != nil {
 		c.String(http.StatusBadRequest, "参数错误")
 		return
 	}
