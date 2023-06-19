@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"log"
 	"mangosteen/api"
 	"mangosteen/config/queries"
@@ -8,6 +9,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/go-playground/validator/v10"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nav-inc/datetime"
@@ -178,7 +181,18 @@ func (ctrl *ItemController) GetPaged(c *gin.Context) {
 func (ctrl *ItemController) GetSummary(c *gin.Context) {
 	var query api.GetSummaryRequest
 	if err := c.BindQuery(&query); err != nil {
-		c.String(http.StatusBadRequest, "参数错误")
+		errMsg := ""
+		switch x := err.(type) {
+		case validator.ValidationErrors:
+			for _, ve := range x {
+				tag := ve.Tag()
+				filed := ve.Field()
+				errMsg += fmt.Sprintf("%s %s.", filed, tag)
+			}
+			c.Writer.WriteString(errMsg)
+		default:
+			c.Status(http.StatusInternalServerError)
+		}
 		return
 	}
 	c.Status(200)
