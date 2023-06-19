@@ -229,7 +229,10 @@ func TestGetSummary(t *testing.T) {
 	ctrl.RegisterRoutes(r.Group("/api"))
 
 	qs := url.Values{
-		"kind": []string{"xxx"},
+		"happened_after":  []string{"2020-01-15T00:00:00+08:00"},
+		"happened_before": []string{"2020-01-18T00:00:00+08:00"},
+		"kind":            []string{"expenses"},
+		"group_by":        []string{"happened_at"},
 	}.Encode()
 
 	w := httptest.NewRecorder()
@@ -251,9 +254,28 @@ func TestGetSummary(t *testing.T) {
 			t.Error(err)
 		}
 	}
+	for i := 0; i < 3; i++ {
+		d, _ := time.Parse(time.RFC3339, "2020-01-17T00:00:00+08:00")
+		if _, err := q.CreateItem(c, queries.CreateItemParams{
+			UserID:     u.ID,
+			Amount:     10000,
+			Kind:       "expenses",
+			TagIds:     []int32{1},
+			HappenedAt: d,
+		}); err != nil {
+			t.Error(err)
+		}
+	}
 	signIn(t, u.ID, req)
 	r.ServeHTTP(w, req)
-	assert.Equal(t, 400, w.Code)
+	assert.Equal(t, 200, w.Code)
 	body := w.Body.String()
-	assert.Equal(t, "参数错误", body)
+	var j api.GetSummaryResponse
+	json.Unmarshal([]byte(body), &j)
+	assert.Equal(t, 60000, j.Total)
+	assert.Equal(t, 2, len(j.Groups))
+	assert.Equal(t, 30000, j.Groups[0].Amount)
+	assert.Equal(t, 30000, j.Groups[1].Amount)
+	assert.Equal(t, "2020-01-15", j.Groups[0].HappenedAt)
+	assert.Equal(t, "2020-01-17", j.Groups[1].HappenedAt)
 }

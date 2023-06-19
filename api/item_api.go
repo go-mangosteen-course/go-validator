@@ -39,3 +39,13 @@ type GetSummaryRequest struct {
 	Kind           string    `form:"kind" binding:"required,oneof=expenses in_come"`
 	GroupBy        string    `form:"group_by" binding:"required"`
 }
+
+type GetSummaryResponse struct {
+	Groups []SummaryGroupByHappenedAt `json:"groups"`
+	Total  int                        `json:"total"`
+}
+
+type SummaryGroupByHappenedAt struct {
+	HappenedAt string `json:"happened_at"`
+	Amount     int    `json:"amount"`
+}

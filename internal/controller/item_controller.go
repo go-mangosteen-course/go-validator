@@ -6,6 +6,7 @@ import (
 	"mangosteen/config/queries"
 	"mangosteen/internal/database"
 	"net/http"
+	"sort"
 	"strconv"
 	"time"
 
@@ -197,5 +198,49 @@ func (ctrl *ItemController) GetSummary(c *gin.Context) {
 		}
 		return
 	}
-	c.Status(200)
+
+	me, _ := c.Get("me")
+	user, _ := me.(queries.User)
+
+	q := database.NewQuery()
+	items, err := q.ListItemsByHappenedAtAndKind(c, queries.ListItemsByHappenedAtAndKindParams{
+		HappenedAfter:  query.HappenedAfter,
+		HappenedBefore: query.HappenedBefore,
+		Kind:           query.Kind,
+		UserID:         user.ID,
+	})
+
+	if err != nil {
+		log.Printf("list items error: %v", err)
+		c.String(http.StatusInternalServerError, "服务器繁忙")
+		return
+	}
+
+	res := api.GetSummaryResponse{}
+	res.Total = 0
+	res.Groups = []api.SummaryGroupByHappenedAt{}
+
+	for _, item := range items {
+		k := item.HappenedAt.Format("2006-01-02")
+		res.Total += int(item.Amount)
+
+		found := false
+		for index, group := range res.Groups {
+			if group.HappenedAt == k {
+				found = true
+				res.Groups[index].Amount += int(item.Amount)
+			}
+		}
+		if !found {
+			res.Groups = append(res.Groups, api.SummaryGroupByHappenedAt{
+				HappenedAt: k,
+				Amount:     int(item.Amount),
+			})
+		}
+	}
+	sort.Slice(res.Groups, func(i, j int) bool {
+		return res.Groups[i].HappenedAt < res.Groups[j].HappenedAt
+	})
+
+	c.JSON(http.StatusOK, res)
 }
