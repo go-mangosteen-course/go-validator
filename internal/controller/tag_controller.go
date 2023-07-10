@@ -33,7 +33,7 @@ func (ctrl *TagController) RegisterRoutes(rg *gin.RouterGroup) {
 //
 //	@Param		name	body		string					true	"标签名"	SchemaExample(通勤)
 //	@Param		sign	body		string					true	"符号"	SchemaExample(👟)
-//	@Param		kind	body		string			true	"类型"
+//	@Param		kind	body		string					true	"类型"
 //
 //	@Success	200		{object}	api.CreateTagResponse	数据
 //	@Failure	422		{string}	string					参数错误
@@ -104,7 +104,7 @@ func (ctrl *TagController) Destroy(c *gin.Context) {
 //	@Param		id		path		string					true	"标签ID"
 //	@Param		name	body		string					true	"标签名"	SchemaExample(通勤)
 //	@Param		sign	body		string					true	"符号"	SchemaExample(👟)
-//	@Param		kind	body		string			true	"类型"
+//	@Param		kind	body		string					true	"类型"
 //
 //	@Success	200		{object}	api.UpdateTagResponse	数据
 //	@Failure	422		{string}	string					参数错误
@@ -184,8 +184,8 @@ func (ctrl *TagController) Get(c *gin.Context) {
 //	@Produce	json
 //	@Security	Bearer
 //
-//	@Param		page	query		number						false "页码"
-//	@Param		kind	query		string						false "类型"
+//	@Param		page	query		number						false	"页码"
+//	@Param		kind	query		string						false	"类型"
 //
 //	@Success	200		{object}	api.GetPagesTagsResponse	数据
 //	@Failure	500		{string}	string						服务器错误

@@ -19,6 +19,8 @@ docker run -d --network=network1 --name mysql-for-go-mangosteen -e MYSQL_DATABAS
 
 ```bash
 go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+go install github.com/swaggo/swag/cmd/swag@latest
+
 ```
 
 ## 创建迁移文件
