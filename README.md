@@ -1,5 +1,12 @@
 课程链接：https://xiedaimala.com/tasks/4928e263-c37f-42a1-8494-ba01c752facf
 
+# 创建配置文件
+
+```bash
+touch ~/.config/mangosteen/config.json
+```
+文件内容从 `config.json.example` 里复制过去
+
 # 启动本地数据库
 
 ## psql
@@ -20,6 +27,8 @@ docker run -d --network=network1 --name mysql-for-go-mangosteen -e MYSQL_DATABAS
 ```bash
 go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 go install github.com/swaggo/swag/cmd/swag@latest
+go install github.com/mailhog/MailHog@latest
+go install github.com/kyleconroy/sqlc/cmd/sqlc@latest
 
 ```
 
