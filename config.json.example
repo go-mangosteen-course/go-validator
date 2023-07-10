@@ -1,8 +1,13 @@
 {
+  "jwt": {
+    "hmac": {
+      "key_path": "/root/.config/mangosteen/jwt/hmac.key"
+    }
+  },
   "email": {
     "smtp": {
-      "host": "smtp.qq.com",
-      "port": 465,
+      "host": "localhost",
+      "port": 1025,
       "user": "fangyinghang@foxmail.com",
       "password": "xxxx"
     }
