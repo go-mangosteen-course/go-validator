@@ -62,6 +62,13 @@ func Migrate() {
 	for !strings.Contains(name, "mangosteen") {
 		dir = filepath.Dir(dir)
 		name = filepath.Base(dir)
+		if dir == "/" {
+			break
+		}
+	}
+	if dir == "/" {
+		fmt.Println("找不到名为 mangosteen 的文件夹，请将项目根目录重命名为 mangosteen")
+		return
 	}
 	if err != nil {
 		log.Fatalln(err)
